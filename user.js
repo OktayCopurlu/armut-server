@@ -26,15 +26,17 @@ const UserSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      required: true,
     },
     status: {
       type: String,
-      required: true,
     },
     photo: {
       type: String,
     },
+    provider: {
+      type:Boolean,
+      required: true,
+    }
   },
   {
     timestamps: true,
