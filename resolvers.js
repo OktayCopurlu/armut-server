@@ -27,27 +27,44 @@ export const resolvers = {
       const category = await ServiceCategory.find(mainCategory);
       return category;
     },
-    getOpportunity: async (_, { category }, { Offer }) => {
-      const opportunity = await Offer.find({ category });
+    getOpportunity: async (_, { category }, { Asked_service }) => {
+      const opportunity = await Asked_service.find({ category });
       return opportunity;
+    },
+    getCantons: async (_, args, { Canton }) => {
+      const cantons = await Canton.find();
+      return cantons;
+    },
+    getCities: async (_, { canton }, { Canton }) => {
+      const cities = await Canton.find({ canton });
+      return cities;
+    },
+    getUserMessages: async (_, { userID }, { Message }) => {
+      const messages = await Message.find({ userID });
+      return messages;
     },
   },
   Mutation: {
-    createOffer: async (
+    createMessage: async (_, payload, { Message }) => {
+      const message = await new Message(payload).save();
+      return message;
+    },
+
+    createAsked_service: async (
       _,
-      { canton, city, date, more_info, category, offeredUser },
-      { Offer }
+      { canton, city, date, more_info, category, asked_service_user },
+      { Asked_service }
     ) => {
-      const offer = await new Offer({
+      const asked_service = await new Asked_service({
         canton,
         city,
         date,
         more_info,
         category,
-        offeredUser,
+        asked_service_user,
       }).save();
 
-      return offer;
+      return asked_service;
     },
 
     setUpCanton: async (_, { canton, gemainde }, { Canton }) => {

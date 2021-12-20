@@ -34,9 +34,33 @@ const UserSchema = new mongoose.Schema(
       type: String,
     },
     provider: {
-      type:Boolean,
+      type: Boolean,
       required: true,
-    }
+    },
+    sendedMessages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    receivedMessages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    asked_service: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Asked_service",
+      },
+    ],
+    given_service: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Given_service",
+      },
+    ],
   },
   {
     timestamps: true,

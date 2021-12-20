@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const OfferSchema = new mongoose.Schema(
+const Asked_service = new mongoose.Schema(
   {
     canton: {
       type: String,
@@ -22,9 +22,10 @@ const OfferSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    offeredUser: {
+    asked_service_user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref:'User'
     },
   },
   {
@@ -32,4 +33,4 @@ const OfferSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Offer", OfferSchema);
+export default mongoose.model("Asked_service", Asked_service);

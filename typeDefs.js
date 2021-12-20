@@ -31,14 +31,24 @@ export const typeDefs = gql`
     gemainde: [String!]!
   }
 
-  type Offer {
+  type Asked_service {
     _id: ID!
     canton: String!
     city: String!
     date: String!
     more_info: String!
     category: String!
-    offeredUser: ID!
+    asked_service_user: ID!
+  }
+  type Message {
+    _id: ID
+    message: String!
+    senderName: String!
+    senderEmail: String!
+    senderID: ID!
+    receviedID: ID!
+    receiverName: String!
+    receiverEmail: String!
   }
   type Token {
     token: String!
@@ -47,10 +57,22 @@ export const typeDefs = gql`
     getUsers: [User]!
     getAllCategories: [AllCategories]!
     getServiceCategory(mainCategory: String!): [ServiceCategory]!
-    getOpportunity(category: String!): [Offer]!
+    getOpportunity(category: String!): [Asked_service]!
+    getCantons: [Canton]!
+    getCities(canton: String!): [Canton]!
+    getUserMessages(userID: ID!): [Message]!
   }
 
   type Mutation {
+    createMessage(
+      message: String!
+      senderName: String!
+      senderEmail: String!
+      senderID: ID!
+      receviedID: ID!
+      receiverName: String!
+      receiverEmail: String!
+    ): Message!
     login(email: String!, password: String!): Token!
     register(
       fullname: String!
@@ -72,13 +94,13 @@ export const typeDefs = gql`
     addPhoto(_id: ID!, photo: String!): Token!
     setUpCategories(name: String!, categories: [String]!): [AllCategories]!
     setUpCanton(canton: String!, gemainde: [String]!): Canton!
-    createOffer(
+    createAsked_service(
       canton: String!
       city: String!
       date: String!
       more_info: String!
       category: String!
-      offeredUser: ID!
-    ): Offer!
+      asked_service_user: ID!
+    ): Asked_service!
   }
 `;

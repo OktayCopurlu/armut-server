@@ -6,7 +6,8 @@ import User from "./user.js";
 import ServiceCategory from "./serviceCategory.js";
 import AllCategories from "./allCategories.js";
 import Canton from "./canton.js";
-import Offer from "./offer.js";
+import Asked_service from "./asked_service.js";
+import Message from "./message.js";
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -15,7 +16,8 @@ const server = new ApolloServer({
     ServiceCategory,
     AllCategories,
     Canton,
-    Offer,
+    Asked_service,
+    Message,
   },
 });
 db();
