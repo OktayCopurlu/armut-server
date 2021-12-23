@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const UserSchema = new mongoose.Schema(
   {
     fullname: {
@@ -37,18 +38,13 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
-    sendedMessages: [
+    messages: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
       },
     ],
-    receivedMessages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
-      },
-    ],
+
     asked_service: [
       {
         type: mongoose.Schema.Types.ObjectId,

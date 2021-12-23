@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+const tokenTime = "4hr";
+const secretKey = "thisismyuniqesecretkey";
 const createToken = (user, secret, expiresIn) => {
   const { fullname, email, _id, address, tel, photo, provider, category } =
     user;
@@ -11,10 +13,13 @@ const createToken = (user, secret, expiresIn) => {
     }
   );
 };
-const tokenTime = "4hr";
-const secretKey = "thisismyuniqesecretkey";
+
 export const resolvers = {
   Query: {
+    getUserInfo: async (_, { _id }, { User }) => {
+      const user = await User.findById(_id);
+      return user;
+    },
     getUsers: async (_, args, { User }) => {
       const users = await User.find();
       return users;
@@ -27,9 +32,9 @@ export const resolvers = {
       const category = await ServiceCategory.find(mainCategory);
       return category;
     },
-    getOpportunity: async (_, { category }, { Asked_service }) => {
-      const opportunity = await Asked_service.find({ category });
-      return opportunity;
+    getAsked_service: async (_, { category }, { Asked_service }) => {
+      const askedService = await Asked_service.find({ category });
+      return askedService;
     },
     getCantons: async (_, args, { Canton }) => {
       const cantons = await Canton.find();
@@ -39,31 +44,69 @@ export const resolvers = {
       const cities = await Canton.find({ canton });
       return cities;
     },
-    getUserMessages: async (_, { userID }, { Message }) => {
-      const messages = await Message.find({ userID });
-      return messages;
+    getUserMessages: async (_, { _id }, { User }) => {
+      const messages = await User.findById({ _id }).populate("messages");
+      return messages.messages;
     },
   },
+
   Mutation: {
-    createMessage: async (_, payload, { Message }) => {
-      const message = await new Message(payload).save();
-      return message;
+    createMessage: async (
+      _,
+      { price, message, senderID, receiverID },
+      { Message, User }
+    ) => {
+      const newMessage = await new Message({
+        price,
+        message,
+        senderID,
+        receiverID,
+      }).save();
+      await User.findOneAndUpdate(
+        { _id: senderID },
+        { $addToSet: { messages: newMessage._id } },
+        { new: true }
+      );
+      await User.findOneAndUpdate(
+        { _id: receiverID },
+        { $addToSet: { messages: newMessage._id } },
+        { new: true }
+      );
+      return newMessage;
     },
 
     createAsked_service: async (
       _,
-      { canton, city, date, more_info, category, asked_service_user },
-      { Asked_service }
-    ) => {
-      const asked_service = await new Asked_service({
+      {
+        fullname,
+        email,
+        tel,
         canton,
         city,
         date,
-        more_info,
+        message,
+        category,
+        asked_service_user,
+      },
+      { Asked_service, User }
+    ) => {
+      const asked_service = await new Asked_service({
+        fullname,
+        email,
+        tel,
+        canton,
+        city,
+        date,
+        message,
         category,
         asked_service_user,
       }).save();
 
+      await User.findOneAndUpdate(
+        { _id: asked_service_user },
+        { $addToSet: { asked_service: asked_service._id } },
+        { new: true }
+      );
       return asked_service;
     },
 

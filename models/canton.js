@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const CantonSchema = new mongoose.Schema(
+const Canton = new mongoose.Schema(
   {
     canton: {
       type: String,
@@ -12,4 +12,4 @@ const CantonSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-export default mongoose.model("Canton", CantonSchema);
+export default mongoose.model("Canton", Canton);

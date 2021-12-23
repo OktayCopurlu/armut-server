@@ -11,12 +11,16 @@ export const typeDefs = gql`
     status: String
     photo: String
     provider: Boolean!
+    messages: [ID!]
+    asked_service: [ID!]
+    given_service: [ID!]
   }
   type AllCategories {
     _id: ID!
     name: String!
     categories: [String]!
   }
+
   type ServiceCategory {
     _id: ID!
     mainCategory: String!
@@ -33,45 +37,47 @@ export const typeDefs = gql`
 
   type Asked_service {
     _id: ID!
+    fullname: String!
+    email: String!
+    tel: String!
     canton: String!
     city: String!
     date: String!
-    more_info: String!
+    message: String!
     category: String!
     asked_service_user: ID!
   }
   type Message {
     _id: ID
+    price: String
     message: String!
-    senderName: String!
-    senderEmail: String!
     senderID: ID!
-    receviedID: ID!
-    receiverName: String!
-    receiverEmail: String!
+    receiverID: ID!
   }
   type Token {
     token: String!
+  }
+
+  type Subscription {
+    createMessage: Message!
   }
   type Query {
     getUsers: [User]!
     getAllCategories: [AllCategories]!
     getServiceCategory(mainCategory: String!): [ServiceCategory]!
-    getOpportunity(category: String!): [Asked_service]!
+    getAsked_service(category: String!): [Asked_service]!
     getCantons: [Canton]!
     getCities(canton: String!): [Canton]!
-    getUserMessages(userID: ID!): [Message]!
+    getUserMessages(_id: ID!): [Message]!
+    getUserInfo(_id: ID!): User!
   }
 
   type Mutation {
     createMessage(
       message: String!
-      senderName: String!
-      senderEmail: String!
+      price: String
+      receiverID: ID!
       senderID: ID!
-      receviedID: ID!
-      receiverName: String!
-      receiverEmail: String!
     ): Message!
     login(email: String!, password: String!): Token!
     register(
@@ -95,12 +101,16 @@ export const typeDefs = gql`
     setUpCategories(name: String!, categories: [String]!): [AllCategories]!
     setUpCanton(canton: String!, gemainde: [String]!): Canton!
     createAsked_service(
+      fullname: String!
+      email: String!
+      tel: String!
       canton: String!
       city: String!
       date: String!
-      more_info: String!
+      message: String!
       category: String!
       asked_service_user: ID!
     ): Asked_service!
   }
 `;
+

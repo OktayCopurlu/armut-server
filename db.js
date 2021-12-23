@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export function db() {
+export default function db() {
   mongoose
     .connect(
       "mongodb+srv://Oktay1299:Oktay1299@learningvue.yznfv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",

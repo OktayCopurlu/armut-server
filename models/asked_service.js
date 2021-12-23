@@ -2,6 +2,18 @@ import mongoose from "mongoose";
 
 const Asked_service = new mongoose.Schema(
   {
+    fullname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    tel: {
+      type: String,
+      required: true,
+    },
     canton: {
       type: String,
       required: true,
@@ -14,7 +26,7 @@ const Asked_service = new mongoose.Schema(
       type: String,
       required: true,
     },
-    more_info: {
+    message: {
       type: String,
       required: true,
     },
@@ -25,7 +37,7 @@ const Asked_service = new mongoose.Schema(
     asked_service_user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref:'User'
+      ref: "User",
     },
   },
   {

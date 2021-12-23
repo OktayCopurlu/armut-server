@@ -6,36 +6,24 @@ const Message = new mongoose.Schema(
       type: String,
       required: true,
     },
-    senderName: {
+    price: {
       type: String,
-      required: true,
-    },
-    senderEmail: {
-      type: String,
-      required: true,
-    },
-    senderID: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
     },
     receiverID: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    receiverName: {
-      type: String,
+    senderID: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-    },
-    receiverEmail: {
-      type: String,
-      required: true,
+      ref: "User",
     },
   },
   {
     timestamps: true,
   }
 );
-
 export default mongoose.model("Message", Message);
+
+
