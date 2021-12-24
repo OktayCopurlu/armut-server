@@ -19,6 +19,10 @@ const Message = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    asked_service_id:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Asked_service",
+    }
   },
   {
     timestamps: true,

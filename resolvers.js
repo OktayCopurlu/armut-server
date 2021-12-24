@@ -53,7 +53,7 @@ export const resolvers = {
   Mutation: {
     createMessage: async (
       _,
-      { price, message, senderID, receiverID },
+      { price, message, senderID, receiverID, asked_service_id },
       { Message, User }
     ) => {
       const newMessage = await new Message({
@@ -61,6 +61,7 @@ export const resolvers = {
         message,
         senderID,
         receiverID,
+        asked_service_id,
       }).save();
       await User.findOneAndUpdate(
         { _id: senderID },
@@ -72,6 +73,13 @@ export const resolvers = {
         { $addToSet: { messages: newMessage._id } },
         { new: true }
       );
+      if (asked_service_id) {
+        await User.findOneAndUpdate(
+          { _id: senderID },
+          { $addToSet: { given_offer: asked_service_id } },
+          { new: true }
+        );
+      }
       return newMessage;
     },
 

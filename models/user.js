@@ -57,6 +57,12 @@ const UserSchema = new mongoose.Schema(
         ref: "Given_service",
       },
     ],
+    given_offer: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Asked_service",
+      },
+    ],
   },
   {
     timestamps: true,

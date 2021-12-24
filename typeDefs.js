@@ -14,6 +14,7 @@ export const typeDefs = gql`
     messages: [ID!]
     asked_service: [ID!]
     given_service: [ID!]
+    given_offer: [ID!]
   }
   type AllCategories {
     _id: ID!
@@ -53,6 +54,7 @@ export const typeDefs = gql`
     message: String!
     senderID: ID!
     receiverID: ID!
+    asked_service_id: ID
   }
   type Token {
     token: String!
@@ -78,6 +80,7 @@ export const typeDefs = gql`
       price: String
       receiverID: ID!
       senderID: ID!
+      asked_service_id: ID
     ): Message!
     login(email: String!, password: String!): Token!
     register(
@@ -113,4 +116,3 @@ export const typeDefs = gql`
     ): Asked_service!
   }
 `;
-
