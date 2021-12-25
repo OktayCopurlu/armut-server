@@ -48,6 +48,13 @@ export const resolvers = {
       const messages = await User.findById({ _id }).populate("messages");
       return messages.messages;
     },
+    getUserRezervations: async (_, { _id }, { User }) => {
+      const rezervations = await User.findById({ _id }).populate(
+        "asked_service"
+      );
+      console.log(rezervations);
+      return rezervations.asked_service;
+    },
   },
 
   Mutation: {

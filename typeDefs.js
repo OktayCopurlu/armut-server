@@ -71,6 +71,7 @@ export const typeDefs = gql`
     getCantons: [Canton]!
     getCities(canton: String!): [Canton]!
     getUserMessages(_id: ID!): [Message]!
+    getUserRezervations(_id: ID!): [Asked_service]!
     getUserInfo(_id: ID!): User!
   }
 
