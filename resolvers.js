@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import transporter from "./email.js";
 
-const PASSWORD_URL = "http://localhost:4000/forgot-password";
+const PASSWORD_URL = "http://localhost:3000/reset_password";
 const tokenTime = "4hr";
 const secretKey = "thisismyuniqesecretkey";
 const createToken = (user, secret, expiresIn) => {
@@ -77,14 +77,14 @@ export const resolvers = {
         throw new Error("User doesn't exist");
       }
 
-      const token = createToken(user, secretKey, tokenTime);
+      const token = createToken(user, secretKey, "1hr");
       const mailOptions = {
         from: "selimhalim12@gmail.com",
         to: email,
         subject: "New Password Link",
         html: `
         <h2>Please click on given link to reset your password.</h2>
-        <a href=${PASSWORD_URL}/${token}>${PASSWORD_URL}/${token}</a>
+        <a href=${PASSWORD_URL}/${token}>Reset Password</a>
         `,
       };
 
@@ -111,7 +111,11 @@ export const resolvers = {
         { password },
         { new: true }
       );
-      return user;
+      if (user) {
+        return { token };
+      } else {
+       return new Error("Email does not exist");
+      }
     },
     createOffer: async (
       _,

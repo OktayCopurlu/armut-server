@@ -94,7 +94,7 @@ export const typeDefs = gql`
       RESET_PASSWORD_KEY: String!
       token: String!
       password: String!
-    ): User!
+    ): Token!
     createOffer(
       price: String!
       clientID: ID!
