@@ -39,6 +39,12 @@ const Asked_service = new mongoose.Schema(
       required: true,
       ref: "User",
     },
+    offer: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Given_Offer",
+      },
+    ],
   },
   {
     timestamps: true,

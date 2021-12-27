@@ -15,6 +15,7 @@ export const typeDefs = gql`
     asked_service: [ID!]
     given_service: [ID!]
     given_offer: [ID!]
+    given_offer_service: [ID!]
   }
   type AllCategories {
     _id: ID!
@@ -35,7 +36,14 @@ export const typeDefs = gql`
     canton: String!
     gemainde: [String!]!
   }
-
+  type Given_Offer {
+    _id: ID!
+    message: [String!]!
+    price: String!
+    clientID: ID!
+    bidderID: ID!
+    serviceID: ID!
+  }
   type Asked_service {
     _id: ID!
     fullname: String!
@@ -47,6 +55,7 @@ export const typeDefs = gql`
     message: String!
     category: String!
     asked_service_user: ID!
+    offer: [ID!]
   }
   type Message {
     _id: ID
@@ -73,9 +82,25 @@ export const typeDefs = gql`
     getUserMessages(_id: ID!): [Message]!
     getUserRezervations(_id: ID!): [Asked_service]!
     getUserInfo(_id: ID!): User!
+    getOffer(bidderID: ID!): [Given_Offer]!
+    getRezervationsOffers(_id: ID!): [Given_Offer]!
+    getOfferMessages(_id: ID!): [Message]!
   }
 
   type Mutation {
+    forgotPassword(email: String!): Token!
+    resetPassword(
+      email: String!
+      RESET_PASSWORD_KEY: String!
+      token: String!
+      password: String!
+    ): User!
+    createOffer(
+      price: String!
+      clientID: ID!
+      bidderID: ID!
+      serviceID: ID!
+    ): Given_Offer!
     createMessage(
       message: String!
       price: String

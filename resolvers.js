@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
+import transporter from "./email.js";
 
+const PASSWORD_URL = "http://localhost:4000/forgot-password";
 const tokenTime = "4hr";
 const secretKey = "thisismyuniqesecretkey";
 const createToken = (user, secret, expiresIn) => {
@@ -52,16 +54,98 @@ export const resolvers = {
       const rezervations = await User.findById({ _id }).populate(
         "asked_service"
       );
-      console.log(rezervations);
       return rezervations.asked_service;
+    },
+    getOffer: async (_, { bidderID }, { Given_Offer }) => {
+      const offers = await Given_Offer.find({ bidderID });
+      return offers;
+    },
+    getRezervationsOffers: async (_, { _id }, { Asked_service }) => {
+      const offers = await Asked_service.findById({ _id }).populate("offer");
+      return offers.offer;
+    },
+    getOfferMessages: async (_, { _id }, { Given_Offer }) => {
+      const offer = await Given_Offer.findById({ _id }).populate("message");
+      return offer.message;
     },
   },
 
   Mutation: {
+    forgotPassword: async (_, { email }, { User }) => {
+      const user = await User.findOne({ email });
+      if (!user) {
+        throw new Error("User doesn't exist");
+      }
+
+      const token = createToken(user, secretKey, tokenTime);
+      const mailOptions = {
+        from: "selimhalim12@gmail.com",
+        to: email,
+        subject: "New Password Link",
+        html: `
+        <h2>Please click on given link to reset your password.</h2>
+        <a href=${PASSWORD_URL}/${token}>${PASSWORD_URL}/${token}</a>
+        `,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+      return { token };
+    },
+    resetPassword: async (
+      _,
+      { email, RESET_PASSWORD_KEY, token, password },
+      { User }
+    ) => {
+      const isValid = jwt.verify(token, RESET_PASSWORD_KEY);
+      if (!isValid) {
+        throw new Error("Token is not valid");
+      }
+      const user = await User.findOneAndUpdate(
+        { email },
+        { password },
+        { new: true }
+      );
+      return user;
+    },
+    createOffer: async (
+      _,
+      { price, clientID, bidderID, serviceID },
+      { Given_Offer, User, Asked_service }
+    ) => {
+      const offer = await new Given_Offer({
+        price,
+        clientID,
+        bidderID,
+        serviceID,
+      }).save();
+      await User.findOneAndUpdate(
+        { _id: bidderID },
+        { $addToSet: { given_offer: offer._id } },
+        { new: true }
+      );
+      await User.findOneAndUpdate(
+        { _id: bidderID },
+        { $addToSet: { given_offer_service: serviceID } },
+        { new: true }
+      );
+      await Asked_service.findByIdAndUpdate(
+        { _id: serviceID },
+        { $addToSet: { offer: offer._id } },
+        { new: true }
+      );
+
+      return offer;
+    },
     createMessage: async (
       _,
       { price, message, senderID, receiverID, asked_service_id },
-      { Message, User }
+      { Message, User, Given_Offer }
     ) => {
       const newMessage = await new Message({
         price,
@@ -81,9 +165,9 @@ export const resolvers = {
         { new: true }
       );
       if (asked_service_id) {
-        await User.findOneAndUpdate(
-          { _id: senderID },
-          { $addToSet: { given_offer: asked_service_id } },
+        await Given_Offer.findOneAndUpdate(
+          { serviceID: asked_service_id },
+          { $addToSet: { message: newMessage._id } },
           { new: true }
         );
       }

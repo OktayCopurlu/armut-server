@@ -60,6 +60,12 @@ const UserSchema = new mongoose.Schema(
     given_offer: [
       {
         type: mongoose.Schema.Types.ObjectId,
+        ref: "Given_Offer",
+      },
+    ],
+    given_offer_service: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Asked_service",
       },
     ],
